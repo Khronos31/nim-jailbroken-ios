@@ -1,5 +1,5 @@
---- nim-1.2.0/compiler/extccomp.nim	2020-04-03 21:47:21.000000000 +0900
-+++ patches/compiler/extccomp.nim	2020-06-01 07:19:57.000000000 +0900
+--- nim-1.2.2/compiler/extccomp.nim	1592319535.000000000
++++ patches/compiler/extccomp.nim	1592639785.032973000
 @@ -125,8 +125,11 @@
    result.compilerExe = "llvm-gcc"
    result.cppCompiler = "llvm-g++"
@@ -14,7 +14,7 @@
    else:
      result.buildLib = "llvm-ar rcs $libfile $objfiles"
  
-@@ -830,19 +833,21 @@
+@@ -858,19 +861,21 @@
          (ose.msg & " " & $ose.errorCode))
      raise
  
@@ -35,17 +35,17 @@
  
 -proc maybeRunDsymutil(conf: ConfigRef; exe: AbsoluteFile) =
 -  when defined(osx):
--    if optCDebug notin conf.globalOptions: return
--    # if needed, add an option to skip or override location
--    let cmd = "dsymutil " & $(exe).quoteShell
--    conf.extraCmds.add cmd
--    tryExceptOSErrorMessage(conf, "invocation of dsymutil failed."):
--      execExternalProgram(conf, cmd, hintExecuting)
+-    if optCDebug in conf.globalOptions and optGenStaticLib notin conf.globalOptions:
+-      # if needed, add an option to skip or override location
+-      let cmd = "dsymutil " & $(exe).quoteShell
+-      conf.extraCmds.add cmd
+-      tryExceptOSErrorMessage(conf, "invocation of dsymutil failed."):
+-        execExternalProgram(conf, cmd, hintExecuting)
 -
  proc execCmdsInParallel(conf: ConfigRef; cmds: seq[string]; prettyCb: proc (idx: int)) =
    let runCb = proc (idx: int, p: Process) =
      let exitCode = p.peekExitCode
-@@ -913,6 +918,7 @@
+@@ -941,6 +946,7 @@
  proc callCCompiler*(conf: ConfigRef) =
    var
      linkCmd: string
@@ -53,7 +53,7 @@
    if conf.globalOptions * {optCompileOnly, optGenScript} == {optCompileOnly}:
      return # speed up that call if only compiling and no script shall be
             # generated
-@@ -983,6 +989,7 @@
+@@ -1011,6 +1017,7 @@
        let mainOutput = if optGenScript notin conf.globalOptions: conf.prepareToWriteOutput
                         else: AbsoluteFile(conf.projectName)
        linkCmd = getLinkCmd(conf, mainOutput, objfiles)
@@ -61,7 +61,7 @@
        if optCompileOnly notin conf.globalOptions:
          const MaxCmdLen = when defined(windows): 8_000 else: 32_000
          if linkCmd.len > MaxCmdLen:
-@@ -992,7 +999,8 @@
+@@ -1020,7 +1027,8 @@
            linkViaResponseFile(conf, linkCmd)
          else:
            execLinkCmd(conf, linkCmd)
@@ -71,7 +71,7 @@
    else:
      linkCmd = ""
    if optGenScript in conf.globalOptions:
-@@ -1080,7 +1088,7 @@
+@@ -1108,7 +1116,7 @@
      str getLinkCmd(conf, conf.absOutFile, objfiles)
  
      lit ",\L\"extraCmds\": "

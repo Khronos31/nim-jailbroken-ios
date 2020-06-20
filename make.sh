@@ -13,7 +13,7 @@ if [ "${ARCH}" = arm ]; then
   ARCH=armv7
 fi
 
-VERSION="1.2.0"
+VERSION="1.2.2"
 PATCHVERSION="1"
 
 download() {

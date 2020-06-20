@@ -1,5 +1,5 @@
---- nim-1.2.0/lib/posix/posix_other.nim	1585918038.000000000
-+++ patches/lib/posix/posix_other.nim	1585918038.000000000
+--- nim-1.2.2/lib/posix/posix_other.nim	1592319522.000000000
++++ patches/lib/posix/posix_other.nim	1592639136.993988939
 @@ -225,7 +225,11 @@
                            ## For a typed memory object, the length in bytes.
                            ## For other file types, the use of this field is
