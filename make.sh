@@ -34,7 +34,7 @@ init() {
 }
 
 applyPatch() {
-  for p in $(find "${PROJECTROOT}/patches/${VERSION}" -name "*.patch"); do
+  for p in $(find "${PROJECTROOT}/patches" -name "*.patch"); do
     patch -u -p0 -d "${BUILDROOT}" -i "$p"
   done
 }
@@ -136,9 +136,12 @@ pack() {
   sed -e "/^Version:/s/%%VERSION%%/${VERSION}-${PATCHVERSION}/" \
       -e "/^Description:/s_%%ARCHS%%_${ARCHS}_" \
       -i -- "${BUILDROOT}/build/DEBIAN/control"
-  dpkg-deb -Zgzip --root-owner-group --build "${BUILDROOT}/build" "${BUILDROOT}"
-  # su -c "chown -R 0:0 ${BUILDROOT}/build"
-  # dpkg-deb -Zgzip --build "${BUILDROOT}/build" "${BUILDROOT}"
+  if dpkg --compare-versions "$(dpkg-query -f '${Version}' -W dpkg)" ge 1.19.0; then
+    dpkg-deb -Zgzip --root-owner-group --build "${BUILDROOT}/build" "${BUILDROOT}"
+  else
+    su <<<"chown -R 0:0 \"${BUILDROOT}/build\""
+    dpkg-deb -Zgzip --build "${BUILDROOT}/build" "${BUILDROOT}"
+  fi
 }
 
 init "${ARCH}"
