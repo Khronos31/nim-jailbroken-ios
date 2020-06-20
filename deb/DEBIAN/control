@@ -1,0 +1,13 @@
+Package: com.khronos.nim
+Priority: optional
+Name: Nim
+Version: %%VERSION%%
+Section: Scripting
+Architecture: iphoneos-arm
+Conflicts: nim
+Replaces: nim
+Provides: nim
+Maintainer: Khronos
+Homepage: https://nim-lang.org/
+Tag: purpose::console
+Description: Imperative, multi-paradigm, compiled programming language
