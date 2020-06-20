@@ -1,5 +1,5 @@
 --- nim-1.2.0/config/nim.cfg	1585918038.000000000
-+++ patches/nim-1.2.0/config/nim.cfg	1585918038.000000000
++++ patches/config/nim.cfg	1585918038.000000000
 @@ -317,3 +317,13 @@
    --define:nimOldCaseObjects
    --define:nimOldShiftRight

@@ -1,5 +1,5 @@
 --- nim-1.2.0/compiler/extccomp.nim	2020-04-03 21:47:21.000000000 +0900
-+++ patches/nim-1.2.0/compiler/extccomp.nim	2020-06-01 07:19:57.000000000 +0900
++++ patches/compiler/extccomp.nim	2020-06-01 07:19:57.000000000 +0900
 @@ -125,8 +125,11 @@
    result.compilerExe = "llvm-gcc"
    result.cppCompiler = "llvm-g++"
